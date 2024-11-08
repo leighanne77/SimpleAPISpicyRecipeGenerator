@@ -22,9 +22,20 @@ A Python application that fetches and filters recipes using the Spoonacular API 
 
    # Install requirements
    pip install -r requirements.txt
+
+   # Create a .env file in the project root
+   Add your API key:
+   SPOONACULAR_API_KEY=your_api_key_here
+
+   # Test the Setup
+   python test.py
+   python test_api.py
+
+   # Run the Application
+   python spoonacular_app.py
    
 ## Project Structure
-- `Spoonacular_agent_8PM.py`: Main application file
+- `Spoonacular_app.py`: Main application file
 - `test.py`: Test utilities
 - `test_api.py`: API testing and validation
 - `config.yaml`: Configuration settings
