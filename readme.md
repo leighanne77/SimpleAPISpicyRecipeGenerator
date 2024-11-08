@@ -1,15 +1,28 @@
 The Spicy, Gluten/Dairy-Free Recipe Finder
 Powered by Spoonacular
 
-A Python application that fetches and filters recipes using the Spoonacular API specifically geared to retrieve spicier meals - no gluten or dairy, pork or read meat.
+A Python application that fetches and filters recipes using the Spoonacular API specifically geared to retrieve spicier meals - no gluten or dairy, pork, or red meat.
 
-1. Get your own Spoonacular API key at spoonacular.com
-2. Clone this repository
-3. Create a virtual environment and activate it
-4. Create a .env and put this in replace with your own API key from ".1" - SPOONACULAR_API_KEY=your_api_key_here
-5. Run test.py and test_api.py to make sure your API key works
-6. Run spoonacular_agent_8PM.py
+1. **Set Up: Get a Spoonacular API Key**
+   - Sign up at [spoonacular.com](https://spoonacular.com)
+   - Go to [Spoonacular Food API](https://spoonacular.com/food-api)
+   - Click "Start Now"
+   - Navigate to "Profile & API Key"
+   - Generate and immediately copy your own API key, save it
 
+2. **Set Up the Project**
+   ```bash
+   # Clone the repository
+   git clone https://github.com/leighanne77/SimpleAPISpicyRecipeGenerator.git
+   cd SimpleAPISpicyRecipeGenerator
+
+   # Create and activate virtual environment
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+   # Install requirements
+   pip install -r requirements.txt
+   
 ## Project Structure
 - `Spoonacular_agent_8PM.py`: Main application file
 - `test.py`: Test utilities
