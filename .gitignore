@@ -1,0 +1,21 @@
+# Logs
+*.log
+
+# ignore virtualenvs
+.env
+venv/
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Test files (if you don't want to track them)
+test.py
+test_api.py
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,4 @@
+api:
+  spoonacular:
+    key: ${SPOONACULAR_API_KEY}
+    endpoint: https://api.spoonacular.com
