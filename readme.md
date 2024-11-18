@@ -11,20 +11,17 @@ A Python application that fetches and filters recipes using the Spoonacular API 
    - Generate and immediately copy your own API key, save it
 
 2. **Set Up the Project**
-   ```bash
-   # Clone the repository
+
    git clone https://github.com/leighanne77/SimpleAPISpicyRecipeGenerator.git
    cd SimpleAPISpicyRecipeGenerator
 
-   # Create and activate virtual environment - directions are for MacOS (you will need to run "conda deactivate" if you are using anaconda0
+   Mac: you will need to run "conda deactivate" if you are using anaconda
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-   # Install requirements
    pip install -r requirements.txt
 
-   # Create a .env file in the project root
-   Add your API key:
+   # create and then add Spoonacular API key to an .env file in the project root 
    SPOONACULAR_API_KEY=your_api_key_here
 
    # Test the Setup
