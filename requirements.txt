@@ -1,7 +1,8 @@
 certifi==2024.8.30
 charset-normalizer==3.4.0
 idna==3.10
-python-dotenv==1.0.1
+python-dotenv==1.0.1 #but you write "from dotenv import load_dotenv" in the app's script
 PyYAML==6.0.2
 requests==2.32.3
 urllib3==2.2.3
+

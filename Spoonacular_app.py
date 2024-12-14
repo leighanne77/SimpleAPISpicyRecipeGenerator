@@ -16,8 +16,8 @@ def get_random_recipes(number=3, tags="", exclude_ingredients=None):
         "fillIngredients": True,
         "instructionsRequired": True,
         "tags": tags,
-        "type": "main course,soup,salad",  # no beverages or side dishes
-        "excludeCuisine": "beverage",  # Explicitly exclude beverages, because sometimes they sneak in
+        "type": "main course,soup,salad",  # no beverages or side dishes just main courses
+        "excludeCuisine": "beverage",  # Explicitly exclude beverages, because sometimes they sneak in (martinis was a hilarious one)
     }
     
     if exclude_ingredients:
