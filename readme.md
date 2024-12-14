@@ -1,6 +1,6 @@
 The Spicy, Gluten/Dairy-Free Recipe Finder
 
-Powered by Spoonacular
+(using the Spoonacular API) https://github.com/leighanne77/SimpleAPISpicyRecipeGenerator
 
 A flask application that fetches and filters main menu recipes using the Spoonacular API, specifically geared to retrieve spicier meals - with no gluten or dairy, nor pork or red meat. This app does not produce: side dish recipes, salads, soups, or beverages.  
 
