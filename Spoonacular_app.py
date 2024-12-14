@@ -8,8 +8,14 @@ from logging_config import setup_logger
 # Setup logging
 logger = setup_logger()
 
-load_dotenv()
+# Try to load from .env file, but don't fail if it doesn't exist
+load_dotenv(override=True)
+
+# Get API key from environment variable
 API_KEY = os.getenv('SPOONACULAR_API_KEY')
+if not API_KEY:
+    raise ValueError("No API key found. Please set SPOONACULAR_API_KEY environment variable")
+
 app = Flask(__name__)
 
 def get_random_recipes(number=3, tags="", exclude_ingredients=None):
@@ -22,7 +28,7 @@ def get_random_recipes(number=3, tags="", exclude_ingredients=None):
         "fillIngredients": True,
         "instructionsRequired": True,
         "tags": tags,
-        "type": "main course,soup,salad",
+        "type": "main course",
         "excludeCuisine": "beverage",
     }
     
@@ -38,7 +44,11 @@ def get_random_recipes(number=3, tags="", exclude_ingredients=None):
         data = response.json()
         recipes = [r for r in data.get("results", []) 
                   if not any(dtype.lower() in ['drink', 'beverage', 'cocktail', 'alcohol'] 
-                           for dtype in r.get('dishTypes', []))]
+                           for dtype in r.get('dishTypes', []))
+                  and not (
+                      ('soup' in r.get('dishTypes', []) or 'salad' in r.get('dishTypes', [])) 
+                      and 'main course' not in r.get('dishTypes', [])
+                  )]
         
         logger.info("Successfully fetched %d recipes", len(recipes))
         return recipes[:number]
@@ -122,8 +132,5 @@ def internal_error(error):
     return render_template('index.html', error="An internal error occurred. Please try again later."), 500
 
 if __name__ == "__main__":
-    if not API_KEY:
-        logger.error("No API key found. Please set SPOONACULAR_API_KEY in .env file")
-    else:
-        logger.info("Starting Flask application")
-        app.run(debug=True)
+    logger.info("Starting Flask application")
+    app.run(debug=True, host='0.0.0.0', port=5000)
