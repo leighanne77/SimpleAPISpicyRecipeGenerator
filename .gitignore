@@ -1,21 +1,38 @@
 # Logs
+logs/
 *.log
 
-# ignore virtualenvs
+# Environment variables
 .env
-venv/
-.env.*
 
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Test files (if you don't want to track them)
-test.py
-test_api.py
+# Virtual Environment
+venv/
+ENV/
 
-# Editor
-.vscode/
+# IDE
 .idea/
+.vscode/
+*.swp
+*.swo

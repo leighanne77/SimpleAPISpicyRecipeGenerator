@@ -2,38 +2,55 @@ import requests
 import os
 from dotenv import load_dotenv
 from typing import List, Dict, Optional
+from flask import Flask, render_template, request, jsonify
+from logging_config import setup_logger
+
+# Setup logging
+logger = setup_logger()
 
 load_dotenv()
 API_KEY = os.getenv('SPOONACULAR_API_KEY')
+app = Flask(__name__)
 
 def get_random_recipes(number=3, tags="", exclude_ingredients=None):
     url = "https://api.spoonacular.com/recipes/complexSearch"
     params = {
         "apiKey": API_KEY,
-        "number": number * 2,  # Request more to account for filtering
+        "number": number * 2,
         "sort": "random",
         "addRecipeInformation": True,
         "fillIngredients": True,
         "instructionsRequired": True,
         "tags": tags,
-        "type": "main course,soup,salad",  # no beverages or side dishes just main courses
-        "excludeCuisine": "beverage",  # Explicitly exclude beverages, because sometimes they sneak in (martinis was a hilarious one)
+        "type": "main course,soup,salad",
+        "excludeCuisine": "beverage",
     }
     
     if exclude_ingredients:
         params["excludeIngredients"] = ",".join(exclude_ingredients)
     
-    print("\nFetching recipes...")
-    response = requests.get(url, params=params)
+    logger.info("Fetching recipes with params: %s", {k: v for k, v in params.items() if k != 'apiKey'})
     
-    if response.status_code == 200:
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        
         data = response.json()
         recipes = [r for r in data.get("results", []) 
                   if not any(dtype.lower() in ['drink', 'beverage', 'cocktail', 'alcohol'] 
                            for dtype in r.get('dishTypes', []))]
-        return recipes[:number]  
-    else:
-        print(f"Error {response.status_code}: {response.text}")
+        
+        logger.info("Successfully fetched %d recipes", len(recipes))
+        return recipes[:number]
+        
+    except requests.exceptions.RequestException as e:
+        logger.error("API request failed: %s", str(e))
+        return None
+    except ValueError as e:
+        logger.error("Failed to parse API response: %s", str(e))
+        return None
+    except Exception as e:
+        logger.error("Unexpected error: %s", str(e))
         return None
 
 def print_recipe(recipe: Dict):
@@ -60,42 +77,53 @@ def print_recipe(recipe: Dict):
     print(f"Cuisine: {', '.join(recipe.get('cuisines', ['Not specified']))}")
     print("="*50 + "\n")
 
-def main():
-    print("Welcome to the Spicy, Gluten/Dairy-Free Recipe Finder!")
-    
-    if not API_KEY:
-        print("Error: No API key found. Please set SPOONACULAR_API_KEY in .env file")
-        return
-    
-    exclude_ingredients = ["pork", "red meat", "dairy", "wheat", "whey", "rye", "barley", "cheese", "milk", "cream"]
-    search_tags = ["spicy"]
-    
-    print(f"\nSearching for spicy recipes excluding: {', '.join(exclude_ingredients)}")
-    print("Looking for main courses, soups, salads, and side dishes...")
-    
-    recipes = get_random_recipes(
-        number=5,
-        tags=",".join(search_tags),
-        exclude_ingredients=exclude_ingredients
-    )
-    
-    if recipes:
-        # Additional filtering for food-only recipes b/c sometimes cocktail recipes sneak in
-        filtered_recipes = [r for r in recipes 
-                          if r.get('dishTypes') and 
-                          not any(t.lower() in ['drink', 'beverage', 'cocktail', 'alcohol'] 
-                                for t in r['dishTypes'])]
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    try:
+        if request.method == 'POST':
+            logger.info("Processing POST request for recipe search")
+            
+            exclude_ingredients = ["pork", "red meat", "dairy", "wheat", "whey", "rye", "barley", "cheese", "milk", "cream"]
+            search_tags = ["spicy"]
+            
+            recipes = get_random_recipes(
+                number=5,
+                tags=",".join(search_tags),
+                exclude_ingredients=exclude_ingredients
+            )
+            
+            if recipes:
+                filtered_recipes = [r for r in recipes 
+                                  if r.get('dishTypes') and 
+                                  not any(t.lower() in ['drink', 'beverage', 'cocktail', 'alcohol'] 
+                                        for t in r['dishTypes'])]
+                
+                logger.info("Found %d recipes after filtering", len(filtered_recipes))
+                return render_template('index.html', recipes=filtered_recipes)
+            
+            logger.warning("No recipes found matching criteria")
+            return render_template('index.html', error="No recipes found matching your criteria.")
         
-        if filtered_recipes:
-            print(f"\nFound {len(filtered_recipes)} food recipes!")
-            for recipe in filtered_recipes:
-                print_recipe(recipe)
-        else:
-            print("\nNo suitable food recipes found after filtering.")
-    else:
-        print("\nNo recipes found matching your criteria.")
-    
-    print("\nThank you for using the Spicy, Gluten/Dairy-Free Recipe Finder!")
+        logger.info("Serving GET request for home page")
+        return render_template('index.html')
+        
+    except Exception as e:
+        logger.error("Error in home route: %s", str(e))
+        return render_template('index.html', error="An unexpected error occurred. Please try again later.")
+
+@app.errorhandler(404)
+def not_found_error(error):
+    logger.error('Page not found: %s', request.url)
+    return render_template('index.html', error="Page not found"), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    logger.error('Server Error: %s', str(error))
+    return render_template('index.html', error="An internal error occurred. Please try again later."), 500
 
 if __name__ == "__main__":
-    main()
+    if not API_KEY:
+        logger.error("No API key found. Please set SPOONACULAR_API_KEY in .env file")
+    else:
+        logger.info("Starting Flask application")
+        app.run(debug=True)
