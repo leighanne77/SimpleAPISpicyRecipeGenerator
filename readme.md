@@ -1,5 +1,5 @@
 The Spicy, Gluten/Dairy-Free Recipe Finder
-Powered by Spoonacular
+(using the Spoonacular API) https://github.com/leighanne77/SimpleAPISpicyRecipeGenerator
 
 A Python application that fetches and filters recipes using the Spoonacular API specifically geared to retrieve spicier meals - no gluten or dairy, pork, or red meat.
 
