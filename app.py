@@ -133,4 +133,4 @@ def internal_error(error):
     return render_template('index.html', error="An internal error occurred. Please try again later."), 500
 
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80)
