@@ -1,4 +1,3 @@
-import requests
 import os
 from dotenv import load_dotenv
 from typing import List, Dict, Optional
@@ -10,7 +9,7 @@ from waitress import serve
 logger = setup_logger()
 
 # Try to load from .env file, but don't fail if it doesn't exist
-load_dotenv(override=True)
+load_dotenv
 
 # Get API key from environment variable
 API_KEY = os.getenv('SPOONACULAR_API_KEY')
