@@ -130,7 +130,6 @@ def not_found_error(error):
 def internal_error(error):
     logger.error('Server Error: %s', str(error))
     return render_template('index.html', error="An internal error occurred. Please try again later."), 500
-
 if __name__ == "__main__":
-    logger.info("Starting Flask application")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    from waitress import serve
+    serve(app, host='0.0.0.0', port=80)
