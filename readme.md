@@ -2,6 +2,8 @@ The Spicy, Gluten/Dairy-Free Recipe Finder
 
 (using the Spoonacular API) https://github.com/leighanne77/SimpleAPISpicyRecipeGenerator
 
+If you want to try this "live" right now, it is running on seenode: https://web-e1jordiwskf3.up-de-fra1-k8s-1.apps.run-on-seenode.com/ 
+
 A flask application that fetches and filters main menu recipes using the Spoonacular API, specifically geared to retrieve spicier meals - with no gluten or dairy, nor pork or red meat. This app does not produce: side dish recipes, salads, soups, or beverages.  
 
 1. **Set Up: Get a Spoonacular API Key**
@@ -34,7 +36,7 @@ VS Code (Mac): Make sure you have Python then...
    python spoonacular_app.py
    
 ## Project Structure
-- `Spoonacular_app.py`: Main application file
+- `app.py`: Main application file
 - `test.py`: Test utilities
 - `test_api.py`: API testing and validation
 - `config.yaml`: Configuration settings

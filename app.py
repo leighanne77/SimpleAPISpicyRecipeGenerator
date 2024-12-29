@@ -8,11 +8,15 @@ from waitress import serve
 
 # Setup logging
 logger = setup_logger()
+# for debugging start up
+logger.info("Application startup - checking configuration...")
+logger.info(f"Current working directory: {os.getcwd()}")
+logger.info(f"API Key present: {bool(API_KEY)}")
+logger.info(f"Templates directory exists: {os.path.exists('templates')}")
+logger.info(f"index.html exists: {os.path.exists('templates/index.html')}")
 
-# Try to load from .env file, but don't fail if it doesn't exist
 load_dotenv
 
-# Get API key from environment variable
 API_KEY = os.getenv('SPOONACULAR_API_KEY')
 if not API_KEY:
     raise ValueError("No API key found. Please set SPOONACULAR_API_KEY environment variable")
@@ -133,4 +137,4 @@ def internal_error(error):
     return render_template('index.html', error="An internal error occurred. Please try again later."), 500
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, debug=True)
